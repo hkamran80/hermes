@@ -9,7 +9,7 @@ Make sure you have the following items:
 
 Clone this repository to your computer, open the folder, and run the `main.py` file, with `python3 main.py`
 
-* This code only works on Darwin-based (macOS) systems, at the moment *
+*This code only works on Darwin-based (macOS) systems, at the moment*
 # Disclaimer
 I am not responsible for any action caused by ANY code in this repository!
 
