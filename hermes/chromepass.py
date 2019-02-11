@@ -1,5 +1,6 @@
 #*/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import os
 import re
 import sys
@@ -7,15 +8,42 @@ import sqlite3
 import csv
 import json
 import argparse
+import binascii
+import hashlib
+import base64
+import subprocess
 
 try:
     import win32crypt
 except:
     pass
 
+def get_SafeStorageKey():
+    ssk_file = "/".join(__file__.split("/")[:-1]) + "/get_ssk.sh"
+    ssk_cmd = subprocess.Popen(["sh", ssk_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+
+    ssk = ssk_cmd[0].decode("ascii").replace("\n", "").replace("\"", "")
+
+    return ssk.encode("ascii")
+
+def decrypt(encrypted_password, iv, key=None):
+    hex_key = binascii.hexlify(key)
+    hex_password = base64.b64encode(encrypted_password[3:])
+
+    print(iv, hex_key, hex_password)
+
+    dc_file = "/".join(__file__.split("/")[:-1]) + "/decrypt_pwd.sh"
+
+    try:
+        decrypted_pass = subprocess.Popen(["sh", dc_file], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    except Exception as e:
+        decrypted_pass = e
+
+    return decrypted_pass
+
 def main():
     info_list = []
-    path = getpath()
+    path = get_path()
     if type(path) == type([]):
         profiles = {}
         for p in sorted(path):
@@ -37,7 +65,7 @@ def main():
                         info_list.append({
                             "origin_url": origin_url,
                             "username": username,
-                            "password": str(password)
+                            "password": password
                         })
             except sqlite3.OperationalError as e:
                 e = str(e)
@@ -72,7 +100,7 @@ def main():
                     info_list.append({
                         "origin_url": origin_url,
                         "username": username,
-                        "password": str(password)
+                        "password": password
                     })
 
         except sqlite3.OperationalError as e:
@@ -90,7 +118,7 @@ def main():
         return info_list
 
 
-def getpath():
+def get_path():
     if os.name == "nt":
         PathName = os.getenv("localappdata") + \
             "\\Google\\Chrome\\User Data\\Default\\"
@@ -117,25 +145,30 @@ def getpath():
     return PathName
 
 def output_csv(info, export_loc=os.getcwd(), _print=True):
+    ssk = get_SafeStorageKey()
+
+    iv = ''.join(('20',) * 16)
+    key = hashlib.pbkdf2_hmac('sha1', ssk, b'saltysalt', 1003)[:16]
+
     if type(info) == type({}):
         for p in info:
             v = info[p]
             try:
                 with open("chrome_{}.csv".format(p.replace(" ", "").lower()), "wb") as csv_file:
-                    csv_file.write("Origin URL,Username,Password \n".encode("utf-8"))
+                    csv_file.write("Origin URL,Username,Password,IV,Key \n".encode("utf-8"))
                     for data in v:
-                        csv_file.write(("{}, {}, {} \n".format(data["origin_url"], data["username"], data["password"])).encode("utf-8"))
+                        sv_file.write(("{}, {}, {}, {}, {} \n".format(data["origin_url"], data["username"], data["password"], iv, key).encode("utf-8")))
 
                 if _print:
                     print("Data written to chrome_{}.csv".format(p.replace(" ", "").lower()))
             except EnvironmentError:
-                print("EnvironmentError: cannot write data")
+                print("EnvironmentError: Unable to write the data!")
     else:
         try:
             with open("chrome.csv", "wb") as csv_file:
-                csv_file.write("Origin URL,Username,Password \n".encode("utf-8"))
+                csv_file.write("URL,Username,Password,IV,Key \n".encode("utf-8"))
                 for data in info:
-                    csv_file.write(("{}, {}, {} \n".format(data["origin_url"], data["username"], data["password"])).encode("utf-8"))
+                    csv_file.write(("{}, {}, {}, {}, {} \n".format(data["origin_url"], data["username"], data["password"], iv, key).encode("utf-8")))
             if _print:
                 print("Data written to chrome.csv")
         except EnvironmentError:

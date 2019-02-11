@@ -178,6 +178,7 @@ def readCSV(from_file):
     reader = csv.DictReader(from_file)
     for row in reader:
         logins.append((rawURL(row["url"]), row["username"], row["password"]))
+
     return logins
 
 
