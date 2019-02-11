@@ -11,6 +11,10 @@ Make sure you have the following items:
 
 Clone this repository to your computer, open the folder, and run the `main.py` file, with `python main.py`
 
+## FAQ
+### Why Python 2?
+None of the machines that I need to get passwords off have Python 3. macOS has Python 2.7 pre-installed. This is why there is a **seperate** branch for Python 2, and Python 3. The Python 2 code was ported using [`3to2`](https://pypi.org/project/3to2/).
+
 *This code only works on Darwin-based (macOS) systems, at the moment*
 # Disclaimer
 I am not responsible for any action caused by ANY code in this repository!
