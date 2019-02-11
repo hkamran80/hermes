@@ -4,12 +4,12 @@ Project Hermes is a password-retrieval system, designed for extracting *browser*
 
 ## How Do I Run Project Hermes?
 Make sure you have the following items:    
-* Python 3
+* Python 2.7
 * Platform-specific
     * Windows:
         * [`pywin32`](https://sourceforge.net/projects/pywin32/files/latest/download)
 
-Clone this repository to your computer, open the folder, and run the `main.py` file, with `python3 main.py`
+Clone this repository to your computer, open the folder, and run the `main.py` file, with `python main.py`
 
 *This code only works on Darwin-based (macOS) systems, at the moment*
 # Disclaimer
