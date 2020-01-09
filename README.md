@@ -1,19 +1,13 @@
 # Project Hermes
 ## What is "Project Hermes"?
-Project Hermes is a password-retrieval system, designed for extracting *browser* passwords from any computer. I am designing this system for myself, as I need to migrate all of my computers' saved passwords, over to a central machine.
+Project Hermes is a password-retrieval system, designed for extracting *browser* passwords from any computer.
 
 ## How Do I Run Project Hermes?
-Make sure you have the following items:    
-* Python 3
-* Platform-specific
-    * Windows:
-        * [`pywin32`](https://sourceforge.net/projects/pywin32/files/latest/download)
+First, make sure you have [Python 3](https://python.org/downloads).
 
-Clone this repository to your computer, open the folder, and run the `main.py` file, with `python3 main.py`
+Then, clone this repository to your computer, open the folder, and run the `main.py` file
 
-*This code only works on Darwin-based (macOS) systems, at the moment*
+*At the moment, this only works on macOS*
+
 # Disclaimer
-I am not responsible for any action caused by ANY code in this repository!
-
-# License
-This repository, and the code in it, is licensed under the GNU General Public License v3.0 license.
+You acknowledge that I am not responsible for anything bad that happens as a result of your actions. However this code is protected by GNU GPLv3, see the license [here](../master/LICENSE). This means you must attribute me if you use *any* of the code in this repository.
